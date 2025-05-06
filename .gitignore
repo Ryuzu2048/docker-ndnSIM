@@ -1,1 +1,4 @@
 *.code-workspace
+work/*
+!work/.gitkeep
+!work/*.code-workspace
