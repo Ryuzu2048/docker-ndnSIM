@@ -40,18 +40,35 @@ RUN apt-get -y install \
     make \
     pkg-config \
     libbz2-dev \
-    pipx \
     ccache
 
 ## https://www.boost.org/users/download/
 ### バージョン1.88.0
-RUN wget https://archives.boost.io/release/1.88.0/source/boost_1_88_0.tar.gz && \
-    tar zxf boost_1_88_0.tar.gz && \
-    cd boost_1_88_0 && \
-    ./bootstrap.sh && \
-    ./b2 --prefix=/usr/local install && \
-    rm -rf boost_1_88_0.tar.gz && \
-    cd /work
+# RUN wget https://archives.boost.io/release/1.88.0/source/boost_1_88_0.tar.gz && \
+#     tar zxf boost_1_88_0.tar.gz && \
+#     cd boost_1_88_0 && \
+#     ./bootstrap.sh && \
+#     ./b2 --prefix=/usr/local install && \
+#     rm -rf boost_1_88_0.tar.gz && \
+#     cd /work
+
+### バージョン1.62.0
+# RUN wget http://downloads.sourceforge.net/project/boost/boost/1.62.0/boost_1_62_0.tar.bz2 && \
+#     tar jxf boost_1_62_0.tar.bz2 && \
+#     cd boost_1_62_0 && \
+#     ./bootstrap.sh && \
+#     sudo ./b2 --prefix=/usr/local install && \
+#     rm -rf boost_1_62_0.tar.bz2 && \
+#     cd /work
+
+### バージョン1.65.1
+# RUN wget https://archives.boost.io/release/1.65.1/source/boost_1_65_1.tar.gz && \
+#     tar zxf boost_1_65_1.tar.gz && \
+#     cd boost_1_65_1 && \
+#     ./bootstrap.sh && \
+#     ./b2 --prefix=/usr/local install && \
+#     rm -rf boost_1_65_1.tar.gz && \
+#     cd /work
 
 ########################↓ START ↓########################    
 # https://ndnsim.net/current/getting-started.html
@@ -62,23 +79,42 @@ RUN apt-get -y install \
     libboost-all-dev \
     libssl-dev \
     git \
-    python3-setuptools \
     castxml
+
+# Install Python 3.10
+RUN wget https://www.python.org/ftp/python/3.10.17/Python-3.10.17.tgz && \
+    tar -xf Python-3.10.17.tgz && \
+    cd Python-3.10.17 && \
+    ./configure --enable-optimizations && \
+    make -j$(nproc) && \
+    make altinstall && \
+    cd .. && rm -rf Python-3.10.17*
+
+# Define python3 as python3.10
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.10 1
+
+# Install pip for Python 3.10
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3 && \
+    ln -s /usr/local/bin/pip3.10 /usr/bin/pip3
+
+# Install pipx for Python 3.10
+RUN python3 -m pip install --upgrade pipx && \
+    python3 -m pipx ensurepath
+
+# Upgrade python3-setuptools for Python 3.10 
+RUN pip3 install --upgrade setuptools
 
 ## Dependencies for NS-3 Python bindings
 RUN apt-get -y install \
     gir1.2-goocanvas-2.0 \
     gir1.2-gtk-3.0 \
     libgirepository1.0-dev \
-    python3-dev \
     python3-gi \
     python3-gi-cairo \
-    python3-pip \
     python3-pygraphviz \
     python3-pygccxml
     
-# RUN pip3 install kiwi # error PEP 668
-RUN pip install kiwi --break-system-packages
+RUN pip3 install kiwi
 
 ########################↑ END ↑########################
 

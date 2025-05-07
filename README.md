@@ -5,6 +5,9 @@
 - ndnSIMのDockerイメージを作成するためのリポジトリです。
 - 基本的に、[Getting Started &#8212;  ndnSIM documentation](https://ndnsim.net/current/getting-started.html)の手順に従って、[`Dockerfile`](./Dockerfile)及び[`entrypoint.sh`](./entrypoint.sh)を作成しています。
 - Dev Container対応
+- Python3.10.1を使用しています。
+- Ubuntu 24.04を使用しています。
+
 
 ## ファイル構造
 
@@ -39,7 +42,9 @@
 git clone -b origin/ubuntu24.04 https://github.com/Ryuzu2048/docker-ndnSIM.git
 ```
 
-### 起動
+### Docker関連
+
+#### 起動
 
 ```shell
 docker compose up
@@ -48,19 +53,31 @@ docker compose up
 ※1 `-d`オプションを付けると、バックグラウンドで起動します。
 ※2 初回が、イメージのビルドに時間がかかります。
 
-### 停止
+#### 停止
 
 ```shell
 docker compose down
 ```
 
-### コンテナに入る
+#### コンテナに入る
 
 ```shell
 docker compose exec ndnsim-docker /bin/bash
 ```
 
-### コンテナ情報の確認（抜粋ver）
+#### コンテナ情報の確認（抜粋ver）
+
+- Hostname
+- ContainerID
+- ContainerName
+- MacAddress
+- Mounts
+  - Source
+  - Destination
+- Gateway
+- IPAddress(IPv4)
+
+が確認できます。
 
 ```shell
 docker inspect --format='
@@ -76,6 +93,31 @@ Gateway: {{range .NetworkSettings.Networks}}{{.Gateway}}{{end}}
 IPAddress(IPv4): {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}/{{range .NetworkSettings.Networks}}{{.IPPrefixLen}}{{end}}
 ===========================
 ' ndnsim-docker
+```
+
+### `waf`コマンドのPythonに関して
+
+#### Pythonを使用する場合
+
+```shell
+# python3 -V
+Python 3.10.1
+```
+
+Pythonのバージョンは、`3.10.1`を使用しています。
+
+その為、[`PEP 674 – Disallow using macros as l-values`](https://peps.python.org/pep-0674/)は起きません。
+
+もし、`waf`コマンドで、Pythonを指定したい場合は、以下のようにしてください。
+
+```shell
+./waf configure --with-python=python3.10
+```
+
+#### Pythonを使用しない場合
+
+```shell
+./waf configure --disable-python
 ```
 
 ## 注意点
@@ -116,6 +158,10 @@ IPAddress(IPv4): {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}/{{rang
 
 ### header fileの追加
 
+STLエラーや一部エラーが出ます。エラーメッセージを見て、必要なヘッダーファイルを追加してください。
+
+以下、例
+
 - `#include <cstdint>`
   - `work/ndnSIM/ns-3/src/network/utils/bit-serializer.h`
   - `work/ndnSIM/ns-3/src/network/utils/bit-deserializer.h`
@@ -137,6 +183,10 @@ IPAddress(IPv4): {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}/{{rang
 
 ### 書き換え
 
+Boostのバージョンによって、`ip::address::from_string`が使えなくなることがあります。
+
+その場合は、`boost::asio::ip::make_address`に書き換えてください。
+
 #### `work/ndnSIM/ns-3/src/ndnSIM/NFD/core/network.hpp`
 
 ```diff
@@ -150,96 +200,6 @@ IPAddress(IPv4): {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}/{{rang
 ```diff
 - auto address = ip::address::from_string(networkStr.substr(0, position), ec);
 + auto address = boost::asio::ip::make_address(networkStr.substr(0, position), ec);
-```
-
-#### `work/ndnSIM/ns-3/build/src/antenna/bindings/ns3module.cc`
-
-```diff
-- Py_TYPE(&PyNs3Angles_Type) = &PyNs3AnglesMeta_Type;
-+ Py_SET_TYPE(&PyNs3Angles_Type, &PyNs3AnglesMeta_Type);
-```
-
-#### `work/ndnSIM/ns-3/build/src/aodv/bindings/ns3module.cc`
-
-```diff
-- Py_TYPE(&PyNs3AodvRoutingProtocol_Type) = &PyNs3AodvRoutingProtocolMeta_Type;
-+ Py_SET_TYPE(&PyNs3AodvRoutingProtocol_Type, &PyNs3AodvRoutingProtocolMeta_Type);
-```
-
-#### `work/ndnSIM/ns-3/build/src/core/bindings/ns3module.cc`
-
-```diff
-- Py_TYPE(&PyNs3Length_Type) = &PyNs3LengthMeta_Type;
-+ Py_SET_TYPE(&PyNs3Length_Type, &PyNs3LengthMeta_Type);
-```
-
-```diff
-- Py_TYPE(&PyNs3Int64x64_t_Type) = &PyNs3Int64x64_tMeta_Type;
-+Py_SET_TYPE(&PyNs3Int64x64_t_Type, &PyNs3Int64x64_tMeta_Type);
-```
-
-```diff
-- Py_TYPE(&PyNs3WallClockSynchronizer_Type) = &PyNs3WallClockSynchronizerMeta_Type;
-+ Py_SET_TYPE(&PyNs3WallClockSynchronizer_Type, &PyNs3WallClockSynchronizerMeta_Type);
-```
-
-```diff
-- Py_TYPE(&PyNs3NormalRandomVariable_Type) = &PyNs3NormalRandomVariableMeta_Type;
-+ Py_SET_TYPE(&PyNs3NormalRandomVariable_Type, &PyNs3NormalRandomVariableMeta_Type);
-```
-
-#### `work/ndnSIM/ns-3/build/src/dsdv/bindings/ns3module.cc`
-
-```diff
-- Py_TYPE(&PyNs3DsdvRoutingProtocol_Type) = &PyNs3DsdvRoutingProtocolMeta_Type;
-+ Py_SetType(&PyNs3DsdvRoutingProtocol_Type, &PyNs3DsdvRoutingProtocolMeta_Type);
-```
-
-#### `work/ndnSIM/ns-3/build/src/dsr/bindings/ns3module.cc`
-
-```diff
-- Py_TYPE(&PyNs3DsrDsrRouting_Type) = &PyNs3DsrDsrRoutingMeta_Type;
-+ Py_SET_TYPE(&PyNs3DsrDsrRouting_Type, &PyNs3DsrDsrRoutingMeta_Type);
-```
-
-```diff
-- Py_TYPE(&PyNs3DsrDsrOptionAck_Type) = &PyNs3DsrDsrOptionAckMeta_Type;
-+ Py_SET_TYPE(&PyNs3DsrDsrOptionAck_Type, &PyNs3DsrDsrOptionAckMeta_Type);
-```
-
-```diff
-- Py_TYPE(&PyNs3DsrDsrOptionAckReq_Type) = &PyNs3DsrDsrOptionAckReqMeta_Type;
-+ Py_SET_TYPE(&PyNs3DsrDsrOptionAckReq_Type, &PyNs3DsrDsrOptionAckReqMeta_Type);
-```
-
-```diff
-- Py_TYPE(&PyNs3DsrDsrOptionPad1_Type) = &PyNs3DsrDsrOptionPad1Meta_Type;
-+ Py_SET_TYPE(&PyNs3DsrDsrOptionPad1_Type, &PyNs3DsrDsrOptionPad1Meta_Type);
-```
-
-```diff
-- Py_TYPE(&PyNs3DsrDsrOptionPadn_Type) = &PyNs3DsrDsrOptionPadnMeta_Type;
-+ Py_SET_TYPE(&PyNs3DsrDsrOptionPadn_Type, &PyNs3DsrDsrOptionPadnMeta_Type);
-```
-
-```diff
-- Py_TYPE(&PyNs3DsrDsrOptionRerr_Type) = &PyNs3DsrDsrOptionRerrMeta_Type;
-+ Py_SET_TYPE(&PyNs3DsrDsrOptionRerr_Type, &PyNs3DsrDsrOptionRerrMeta_Type);
-```
-
-```diff
-- Py_TYPE(&PyNs3DsrDsrOptionRrep_Type) = &PyNs3DsrDsrOptionRrepMeta_Type;
-+ Py_SET_TYPE(&PyNs3DsrDsrOptionRrep_Type, &PyNs3DsrDsrOptionRrepMeta_Type);
-```
-
-```diff
-- Py_TYPE(&PyNs3DsrDsrOptionRreq_Type) = &PyNs3DsrDsrOptionRreqMeta_Type;
-+ Py_SET_TYPE(&PyNs3DsrDsrOptionRreq_Type, &PyNs3DsrDsrOptionRreqMeta_Type);
-```
-
-```diff
-- Py_TYPE(&PyNs3DsrDsrOptionSR_Type) = &PyNs3DsrDsrOptionSRMeta_Type;
-+ Py_SET_TYPE(&PyNs3DsrDsrOptionSR_Type, &PyNs3DsrDsrOptionSRMeta_Type);
 ```
 
 ## 小ネタ
