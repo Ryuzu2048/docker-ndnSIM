@@ -1,0 +1,14 @@
+services:
+  ndnsim-docker:
+    container_name: ndnsim-docker
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./work:/work
+    restart: unless-stopped
+    tty: true
+
+networks:
+  default:
+    name: ndnsim-docker_network

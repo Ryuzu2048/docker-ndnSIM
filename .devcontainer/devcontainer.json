@@ -1,0 +1,19 @@
+{
+    "name": "docker-ndnsim ubuntu20.04",
+    "dockerComposeFile": [
+        "../compose.yaml"
+    ],
+    "service": "ndnsim-docker",
+    "workspaceFolder": "/work",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "mhutchie.git-graph",
+                "ms-python.python",
+                "ms-python.debugpy",
+                "mosapride.zenkaku"
+            ]
+        }
+    }
+}
