@@ -4,6 +4,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        PASSWORD: ${PASSWORD}
+    ports:
+      - "${LOCALHOST_BINDING}${SSH_PORT}:22"
+    env_file:
+      - .env
     volumes:
       - ./work:/work
     restart: unless-stopped

@@ -52,5 +52,5 @@ chmod -R 777 "$WORKDIR"
 
 echo "ndnSIM setup completed in $NDNSIM_DIR"
 
-# === コンテナを維持する ===
-exec bash
+# SSH サーバーの起動
+exec /usr/sbin/sshd -D

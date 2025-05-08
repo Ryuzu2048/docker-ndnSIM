@@ -2,3 +2,4 @@
 work/*
 !work/.gitkeep
 !work/*.code-workspace
+.env

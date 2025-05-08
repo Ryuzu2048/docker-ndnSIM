@@ -1,4 +1,8 @@
-FROM ubuntu:20.04
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+ARG PASSWORD
 
 RUN apt-get -y update && \
     apt-get -y upgrade && \
@@ -32,6 +36,13 @@ RUN apt-get -y install \
     dnsutils \
     p7zip-full
 
+RUN apt-get install -y openssh-server
+
+RUN mkdir /var/run/sshd
+RUN echo "root:${PASSWORD}" | chpasswd
+RUN sed -i "s/#PasswordAuthentication yes/PasswordAuthentication yes/g" /etc/ssh/sshd_config
+RUN sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/" /etc/ssh/sshd_config
+
 # Core dependencies
 ## C, C++, pkg-config, make, gcc, g++, libbz2-dev
 RUN apt-get -y install \
@@ -40,7 +51,6 @@ RUN apt-get -y install \
     make \
     pkg-config \
     libbz2-dev \
-    pipx \
     ccache
 
 ## https://www.boost.org/users/download/
@@ -80,7 +90,6 @@ RUN apt-get -y install \
     libboost-all-dev \
     libssl-dev \
     git \
-    python3-setuptools \
     castxml
 
 ## Dependencies for NS-3 Python bindings
@@ -88,10 +97,8 @@ RUN apt-get -y install \
     gir1.2-goocanvas-2.0 \
     gir1.2-gtk-3.0 \
     libgirepository1.0-dev \
-    python3-dev \
     python3-gi \
     python3-gi-cairo \
-    python3-pip \
     python3-pygraphviz \
     python3-pygccxml
     
@@ -113,4 +120,7 @@ RUN echo 'alias dir="dir --color=auto"' >> /root/.bashrc && \
 
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+
+EXPOSE 22
+
 ENTRYPOINT ["/entrypoint.sh"]
