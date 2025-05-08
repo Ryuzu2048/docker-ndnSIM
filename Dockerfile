@@ -1,5 +1,9 @@
 FROM ubuntu:24.04
 
+ENV DEBIAN_FRONTEND=noninteractive
+
+ARG PASSWORD
+
 RUN apt-get -y update && \
     apt-get -y upgrade && \
     apt-get -y autoremove
@@ -31,6 +35,13 @@ RUN apt-get -y install \
     net-tools \
     dnsutils \
     p7zip-full
+
+RUN apt-get install -y openssh-server
+
+RUN mkdir /var/run/sshd
+RUN echo "root::${PASSWORD}" | chpasswd
+RUN sed -i "s/#PasswordAuthentication yes/PasswordAuthentication yes/g" /etc/ssh/sshd_config
+RUN sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/" /etc/ssh/sshd_config
 
 # Core dependencies
 ## C, C++, pkg-config, make, gcc, g++, libbz2-dev
@@ -133,4 +144,7 @@ RUN echo 'alias dir="dir --color=auto"' >> /root/.bashrc && \
 
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+
+EXPOSE 22
+
 ENTRYPOINT ["/entrypoint.sh"]
