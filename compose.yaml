@@ -7,7 +7,7 @@ services:
       args:
         PASSWORD: ${PASSWORD}
     ports:
-      - "${SSH_PORT}:22"
+      - "${LOCALHOST_FLAG:+127.0.0.1:}${SSH_PORT}:22"
     env_file:
       - .env
     volumes:
