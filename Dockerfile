@@ -39,7 +39,7 @@ RUN apt-get -y install \
 RUN apt-get install -y openssh-server
 
 RUN mkdir /var/run/sshd
-RUN echo "root::${PASSWORD}" | chpasswd
+RUN echo "root:${PASSWORD}" | chpasswd
 RUN sed -i "s/#PasswordAuthentication yes/PasswordAuthentication yes/g" /etc/ssh/sshd_config
 RUN sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/" /etc/ssh/sshd_config
 
