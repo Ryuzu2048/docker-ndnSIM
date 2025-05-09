@@ -90,6 +90,7 @@ RUN apt-get -y install \
     libboost-all-dev \
     libssl-dev \
     git \
+    python3-setuptools \
     castxml
 
 ## Dependencies for NS-3 Python bindings
@@ -97,8 +98,10 @@ RUN apt-get -y install \
     gir1.2-goocanvas-2.0 \
     gir1.2-gtk-3.0 \
     libgirepository1.0-dev \
+    python3-dev \
     python3-gi \
     python3-gi-cairo \
+    python3-pip \
     python3-pygraphviz \
     python3-pygccxml
     
