@@ -5,6 +5,9 @@
 - ndnSIMのDockerイメージを作成するためのリポジトリです。
 - 基本的に、[Getting Started &#8212;  ndnSIM documentation](https://ndnsim.net/current/getting-started.html)の手順に従って、[`Dockerfile`](./Dockerfile)及び[`entrypoint.sh`](./entrypoint.sh)を作成しています。
 - Dev Container対応
+- Python3.10.1を使用しています。
+- Ubuntu 20.04を使用しています。
+
 
 ## ファイル構造
 
@@ -36,10 +39,12 @@
 ### リポジトリのクローン
 
 ```shell
-git clone -b origin/ubuntu20.04 https://github.com/Ryuzu2048/docker-ndnSIM.git
+git clone -b origin/ubuntu24.04 https://github.com/Ryuzu2048/docker-ndnSIM.git
 ```
 
-### 起動
+### Docker関連
+
+#### 起動
 
 ```shell
 docker compose up
@@ -48,19 +53,31 @@ docker compose up
 ※1 `-d`オプションを付けると、バックグラウンドで起動します。
 ※2 初回が、イメージのビルドに時間がかかります。
 
-### 停止
+#### 停止
 
 ```shell
 docker compose down
 ```
 
-### コンテナに入る
+#### コンテナに入る
 
 ```shell
 docker compose exec ndnsim-docker /bin/bash
 ```
 
-### コンテナ情報の確認（抜粋ver）
+#### コンテナ情報の確認（抜粋ver）
+
+- Hostname
+- ContainerID
+- ContainerName
+- MacAddress
+- Mounts
+  - Source
+  - Destination
+- Gateway
+- IPAddress(IPv4)
+
+が確認できます。
 
 ```shell
 docker inspect --format='
@@ -78,9 +95,112 @@ IPAddress(IPv4): {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}/{{rang
 ' ndnsim-docker
 ```
 
+### `waf`コマンドのPythonに関して
+
+#### Pythonを使用する場合
+
+```shell
+# python3 -V
+Python 3.10.1
+```
+
+Pythonのバージョンは、`3.10.1`を使用しています。
+
+その為、[`PEP 674 – Disallow using macros as l-values`](https://peps.python.org/pep-0674/)は起きません。
+
+もし、`waf`コマンドで、Pythonを指定したい場合は、以下のようにしてください。
+
+```shell
+./waf configure --with-python=python3.10
+```
+
+#### Pythonを使用しない場合
+
+```shell
+./waf configure --disable-python
+```
+
 ## 注意点
 
-None
+- Boostを最新バージョンでインストールすると、不具合がたくさん出ています。
+    - 最新バージョンにしろとは書かれていた。
+- 固定幅整数型が未定義のため、`ns3::uint32_t`を使用することがあり、ビルドエラーが発生することがあります。なんでや
+    - `#include <cstdint>`を追加することで解決します。
+- Boostのバージョンによって、ビルドエラーが発生することがあります。
+- [https://www.nsnam.org/wiki/HOWTO_build_old_versions_of_ns-3_on_newer_compilers](HOWTO build old versions of ns-3 on newer compilers - Nsnam)
+
+> Waf-based builds
+> 
+> ns-3 with Waf builds with the following flags by default: "-Wall -Werror". This causes build warnings to trigger an error and stop the build. This causes problems when trying to build older versions of ns-3 on newer systems with newer compilers, since over time, gcc and clang get more strict.
+> 
+> Since ns-3.29 release, Waf included a configure option to disable the "Werror" flag; in this case, warnings will be emitted but they will not stop the build.
+> 
+> For ns-3.29 through ns-3.35 release, to disable warnings from breaking your build, do the following:
+> 
+>  ./waf configure --disable-werror ...(remainder of your configuration options, if any)
+>  ./waf build
+
+### STL header error
+- [https://www.nsnam.org/wiki/HOWTO_build_old_versions_of_ns-3_on_newer_compilers](HOWTO build old versions of ns-3 on newer compilers - Nsnam)
+
+
+> You may run into other issues (such as missing header files) in trying to build on newer platforms. e.g.
+
+```
+ 14:16:16 runner system command -> ['/bin/g++', '-Wall', '-fPIC', '-DPIC', '-Idebug', '-I..', '-DNS3_ASSERT_ENABLE', 
+ '-DNS3_LOG_ENABLE', '-DNETWORK_SIMULATION_CRADLE', '-DNS3_MODULE_COMPILATION', '../src/common/spectrum-model.cc', '-c', 
+ '-o', 'debug/src/common/spectrum-model_1.o']
+ In file included from ../src/common/spectrum-model.cc:22:0:
+ debug/ns3/spectrum-model.h:91:3: error: ‘size_t’ does not name a type
+```
+
+> This particular error is due to a change in C++ STL; the STL headers no longer incorporate c-style headers, so one must include <cstddef> explicitly.
+
+### header fileの追加
+
+STLエラーや一部エラーが出ます。エラーメッセージを見て、必要なヘッダーファイルを追加してください。
+
+以下、例
+
+- `#include <cstdint>`
+  - `work/ndnSIM/ns-3/src/network/utils/bit-serializer.h`
+  - `work/ndnSIM/ns-3/src/network/utils/bit-deserializer.h`
+  - `work/ndnSIM/ns-3/src/wifi/model/block-ack-type.h`
+
+- `#include <optional>`
+  - `work/ndnSIM/ns-3/src/ndnSIM/ndn-cxx/ndn-cxx/util/scheduler.hpp`
+
+- `#include <boost/range/iterator_range.hpp>`
+  - `work/ndnSIM/ns-3/src/ndnSIM/NFD/daemon/table/name-tree.hpp`
+
+- `#include <boost/asio/io_service.hpp>`
+  - `work/ndnSIM/ns-3/src/ndnSIM/NFD/daemon/face/face-system.hpp`
+  - `work/ndnSIM/ns-3/src/ndnSIM/NFD/daemon/mgmt/face-manager.hpp`
+  - `work.ndnSIM/ns-3/src/ndnSIM/ndn-cxx/ndn-cxx/net/network-monitor.hpp`
+
+- `#include <boost/asio/ip/address.hpp>`
+  - `work/ndnSIM/ns-3/src/ndnSIM/NFD/core/network.hpp`
+
+### 書き換え
+
+Boostのバージョンによって、`ip::address::from_string`が使えなくなることがあります。
+
+その場合は、`boost::asio::ip::make_address`に書き換えてください。
+
+#### `work/ndnSIM/ns-3/src/ndnSIM/NFD/core/network.hpp`
+
+```diff
+- network.m_minAddress = ip::address::from_string(networkStr);
++ network.m_minAddress = boost::asio::ip::make_address(networkStr);
+
+- network.m_maxAddress = ip::address::from_string(networkStr);
++ network.m_maxAddress = boost::asio::ip::make_address(networkStr);
+```
+
+```diff
+- auto address = ip::address::from_string(networkStr.substr(0, position), ec);
++ auto address = boost::asio::ip::make_address(networkStr.substr(0, position), ec);
+```
 
 ## 小ネタ
 
