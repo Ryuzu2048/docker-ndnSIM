@@ -20,6 +20,7 @@
  ┣📁work
  ┃ ┣📃docker-ndnSIM.code-workspace
  ┃ ┗📃.gitkeep
+ ┣📃.env.example
  ┣📃.gitignore
  ┣📃compose.yaml
  ┣📃Dockerfile
@@ -30,6 +31,7 @@
 - `.devcontainer` : Dev Containerの設定ファイル
 - `work` : 作業ディレクトリ
 - `docker-ndnSIM.code-workspace` : VSCodeのワークスペースファイル
+- `.env.example` : 環境変数の例
 - `.gitkeep` : 空のディレクトリをGitで管理するためのファイル
 - `.gitignore` : Gitで管理しないファイルを指定するためのファイル
 - `compose.yaml` : Docker Composeの設定ファイル
