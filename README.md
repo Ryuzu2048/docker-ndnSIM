@@ -5,9 +5,8 @@
 - ndnSIMのDockerイメージを作成するためのリポジトリです。
 - 基本的に、[Getting Started &#8212;  ndnSIM documentation](https://ndnsim.net/current/getting-started.html)の手順に従って、[`Dockerfile`](./Dockerfile)及び[`entrypoint.sh`](./entrypoint.sh)を作成しています。
 - Dev Container対応
-- Python3.10.1を使用しています。
-- Ubuntu 20.04を使用しています。
-
+- `Python3.8.10`を使用しています。
+- `Ubuntu 20.04`を使用しています。
 
 ## ファイル構造
 
@@ -39,7 +38,7 @@
 ### リポジトリのクローン
 
 ```shell
-git clone -b origin/ubuntu24.04 https://github.com/Ryuzu2048/docker-ndnSIM.git
+git clone -b origin/ubuntu20.04 https://github.com/Ryuzu2048/docker-ndnSIM.git
 ```
 
 ### Docker関連
@@ -101,24 +100,48 @@ IPAddress(IPv4): {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}/{{rang
 
 ```shell
 # python3 -V
-Python 3.10.1
+Python 3.8.10
 ```
 
-Pythonのバージョンは、`3.10.1`を使用しています。
+Pythonのバージョンは、`3.8.10`を使用しています。
 
 その為、[`PEP 674 – Disallow using macros as l-values`](https://peps.python.org/pep-0674/)は起きません。
 
-もし、`waf`コマンドで、Pythonを指定したい場合は、以下のようにしてください。
+もし、`waf`コマンドで、Pythonを指定したい場合、特にオプションは必要ありません。
 
 ```shell
-./waf configure --with-python=python3.10
+./waf configure
 ```
 
 #### Pythonを使用しない場合
 
+`--disable-python`オプションを指定することで、Pythonを使用しないように設定できます。
+
 ```shell
 ./waf configure --disable-python
 ```
+
+## PyViz visualizer
+
+- [Simulating using ndnSIM](https://ndnsim.net/current/getting-started.html#simulating-using-ndnsim)
+- [PyViz visualizer](https://www.nsnam.org/wiki/PyViz)
+
+ndnSIMでシミュレーションを実行する際に、PyViz visualizerを使用することができます。
+
+使用する際は、`--vis`オプションを指定してください。
+
+### 例
+
+```shell
+./waf --run=ndn-simple --vis
+```
+
+### Tips
+
+- `Dev Container`を使用している場合、`--vis`オプションを指定すると、PyViz visualizerが起動します。
+- SSH接続を使用している場合、接続時に、`-AXY`オプションを指定してください。
+- `Docker Compose`から起動する場合、環境によっては使用できない場合があります。
+  - `docker compose up`
 
 ## 注意点
 
