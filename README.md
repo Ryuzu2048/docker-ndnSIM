@@ -35,13 +35,13 @@
 
 ## 使い方
 
-### リポジトリのクローン
+### 1. リポジトリのクローン
 
 ```shell
 git clone -b origin/ubuntu20.04 https://github.com/Ryuzu2048/docker-ndnSIM.git
 ```
 
-### `.env`ファイルの作成
+### 2. `.env`ファイルの作成
 
 ```shell
 cp .env.example .env
@@ -58,67 +58,59 @@ LOCALHOST_BINDING=127.0.0.1
 ```
 
 - `PASSWORD` : SSH接続時のパスワード
+  - 各自で設定してください。
 - `SSH_PORT` : SSH接続時のポート番号
+  - 例の場合、`10022`がbindされます。
 - `LOCALHOST_BINDING` : SSH接続時のローカルホストのIPアドレス
     - `LOCALHOST_BINDING`は、空欄にすると、`0.0.0.0`が設定されます。
+    - 基本的には、`127.0.0.1`を指定してください。localhost外からSSH接続する場合は、空欄にしてください。
     - [compose.yaml](./compose.yaml)の`ports`セクションで、使用する。
 
-### Docker関連
+### 3. Docker
 
 > [!NOTE]
-> `Dev Container`使用を推奨
-> 
-> [PyViz visualizer](#pyviz-visualizer)を使用することが出来ます。
+> 必要に応じて[Dev Container](https://code.visualstudio.com/docs/devcontainers/containers)を使用してください。
 
-#### 起動
+#### 3.1 起動
 
 ```shell
 docker compose up
 ```
 
-※1 `-d`オプションを付けると、バックグラウンドで起動します。
-※2 初回が、イメージのビルドに時間がかかります。
+- ※1 `-d`オプションを付けると、バックグラウンドで起動します。
+- ※2 初回が、イメージのビルドに時間がかかります。
+- ※3 `docker compose build`を実行すると、イメージのビルドが行われます。
 
-#### 停止
-
-```shell
-docker compose down
-```
-
-#### コンテナに入る
+#### 3.2 コンテナに入る
 
 ```shell
 docker compose exec ndnsim-docker /bin/bash
 ```
 
-#### コンテナ情報の確認（抜粋ver）
-
-- Hostname
-- ContainerID
-- ContainerName
-- MacAddress
-- Mounts
-  - Source
-  - Destination
-- Gateway
-- IPAddress(IPv4)
-
-が確認できます。
+#### 3.3 停止
 
 ```shell
-docker inspect --format='
-==========================
-Hostname: {{.Config.Hostname}}
-ContainerID: {{.Id}}
-ContainerName: {{.Name}}
-MacAddress: {{range .NetworkSettings.Networks}}{{.MacAddress}}{{end}}
-Mounts:{{range .Mounts}}
-  - Source: {{.Source}}
-  - Destination: {{.Destination}}{{end}}
-Gateway: {{range .NetworkSettings.Networks}}{{.Gateway}}{{end}}
-IPAddress(IPv4): {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}/{{range .NetworkSettings.Networks}}{{.IPPrefixLen}}{{end}}
-===========================
-' ndnsim-docker
+docker compose down
+```
+
+### 4. SSH接続
+
+> [!IMPORTANT]
+> 必須ではありませんが、必要に応じてSSH接続を使用してください。
+
+[2. `.env`ファイルの作成](#2-envファイルの作成)で設定した`SSH_PORT`を使用して、SSH接続を行います。
+
+```shell
+ssh -p <SSH_PORT> root@<host>
+```
+
+[PyViz visualizer](#pyviz-visualizer)を使用する場合、`-AXY`オプションを指定してください。
+- `-A` : SSHエージェント転送を有効にします。
+- `-X` : X11転送を有効にします。
+- `-Y` : 信頼できるX11転送を有効にします。
+
+```shell
+ssh -p <SSH_PORT> -AXY root@<host>
 ```
 
 ### `waf`コマンドのPythonに関して
@@ -300,4 +292,34 @@ echo "【echo】docker volume rm $(docker volume ls -qf dangling=true)";\
 docker volume rm $(docker volume ls -qf dangling=true);\
 echo "【echo】docker builder prune -a";\
 docker builder prune -a
+```
+
+### コンテナ情報の確認（抜粋ver）
+
+- Hostname
+- ContainerID
+- ContainerName
+- MacAddress
+- Mounts
+  - Source
+  - Destination
+- Gateway
+- IPAddress(IPv4)
+
+が確認できます。
+
+```shell
+docker inspect --format='
+==========================
+Hostname: {{.Config.Hostname}}
+ContainerID: {{.Id}}
+ContainerName: {{.Name}}
+MacAddress: {{range .NetworkSettings.Networks}}{{.MacAddress}}{{end}}
+Mounts:{{range .Mounts}}
+  - Source: {{.Source}}
+  - Destination: {{.Destination}}{{end}}
+Gateway: {{range .NetworkSettings.Networks}}{{.Gateway}}{{end}}
+IPAddress(IPv4): {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}/{{range .NetworkSettings.Networks}}{{.IPPrefixLen}}{{end}}
+===========================
+' ndnsim-docker
 ```
