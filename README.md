@@ -6,9 +6,17 @@ ndnSIMをDockerで動かすためのリポジトリです。
 
 ## 使い方
 
-```shell
-git clone https://github.com/Ryuzu2048/docker-ndnSIM.git
-```
+1. cloneする
+  ```shell
+  git clone https://github.com/Ryuzu2048/docker-ndnSIM.git
+  ```
+
+2. ブランチを切り替える
+  ```shell
+  git switch ubuntu20.04
+  ```
+
+3. [README.md](https://github.com/Ryuzu2048/docker-ndnSIM/blob/ubuntu20.04/README.md)を参考にして進める。
 
 ## 現在の進捗
 
