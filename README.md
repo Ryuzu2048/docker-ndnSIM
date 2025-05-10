@@ -1,8 +1,7 @@
 # docker-ndnSIM
 
 > [!IMPORTANT]
-> 1. こちらは、[Ryuzu2048/docker-ndnSIM](https://github.com/Ryuzu2048/docker-ndnSIM)の[`ubuntu20.04` branch](https://github.com/Ryuzu2048/docker-ndnSIM/tree/ubuntu20.04)です。
-> 2. [https://github.com/Ryuzu2048/docker-ndnSIM/tree/ubuntu24.04](https://github.com/Ryuzu2048/docker-ndnSIM/tree/ubuntu24.04)は、使用しないでください。
+> - こちらは、[Ryuzu2048/docker-ndnSIM](https://github.com/Ryuzu2048/docker-ndnSIM)の[`ubuntu20.04` branch](https://github.com/Ryuzu2048/docker-ndnSIM/tree/ubuntu20.04)です。
 
 ## 概要
 
