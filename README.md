@@ -43,7 +43,7 @@
 ### 1. リポジトリのクローン
 
 > [!NOTE]
-> - 既にリポジトリ（[Ryuzu2048/docker-ndnSIM](https://github.com/Ryuzu2048/docker-ndnSIM/)）をクローンしている場合は、`git pull`を実行してください。
+> - 既にリポジトリ（[Ryuzu2048/docker-ndnSIM](https://github.com/Ryuzu2048/docker-ndnSIM/)）をクローンしている場合は、最新に更新してください。
 > - `git switch`を使用して、`ubuntu20.04`ブランチに切り替えている場合は、この操作は不要です。
 
 ```shell
