@@ -30,5 +30,5 @@ git switch ubuntu20.04
 
 | OS | 進捗 | URL |
 |:--:|:--:|:--:|
-| Ubuntu 20.04 | example動作確認（Python含む） | https://github.com/Ryuzu2048/docker-ndnSIM/tree/ubuntu20.04 |
+| Ubuntu 20.04 | - example動作確認  <br> - visualizer動作確認 | https://github.com/Ryuzu2048/docker-ndnSIM/tree/ubuntu20.04 |
 | Ubuntu 22.04 | 未完成 | https://github.com/Ryuzu2048/docker-ndnSIM/tree/ubuntu24.04 |
