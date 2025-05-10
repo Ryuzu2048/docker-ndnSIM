@@ -1,5 +1,9 @@
 # docker-ndnSIM
 
+> [!IMPORTANT]
+> 1. こちらは、[Ryuzu2048/docker-ndnSIM](https://github.com/Ryuzu2048/docker-ndnSIM)の[`ubuntu20.04` branch](https://github.com/Ryuzu2048/docker-ndnSIM/tree/ubuntu20.04)です。
+> 2. [https://github.com/Ryuzu2048/docker-ndnSIM/tree/ubuntu24.04](https://github.com/Ryuzu2048/docker-ndnSIM/tree/ubuntu24.04)は、使用しないでください。
+
 ## 概要
 
 - ndnSIMのDockerイメージを作成するためのリポジトリです。
@@ -171,7 +175,6 @@ ndnSIMでシミュレーションを実行する際に、PyViz visualizerを使�
 ## 注意点
 
 - Boostを最新バージョンでインストールすると、不具合がたくさん出ています。
-    - 最新バージョンにしろとは書かれていた。
 - 固定幅整数型が未定義のため、`ns3::uint32_t`を使用することがあり、ビルドエラーが発生することがあります。
     - `#include <cstdint>`を追加することで解決します。
 - Boostのバージョンによって、ビルドエラーが発生することがあります。
