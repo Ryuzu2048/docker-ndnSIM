@@ -37,6 +37,9 @@
 
 ### 1. リポジトリのクローン
 
+> [!NOTE]
+> 既にリポジトリ（[Ryuzu2048/docker-ndnSIM](https://github.com/Ryuzu2048/docker-ndnSIM/)）をクローンしている場合は、`git pull`を実行してください。
+
 ```shell
 git clone -b origin/ubuntu20.04 https://github.com/Ryuzu2048/docker-ndnSIM.git
 ```
