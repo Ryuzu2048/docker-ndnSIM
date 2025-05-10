@@ -172,7 +172,7 @@ ndnSIMでシミュレーションを実行する際に、PyViz visualizerを使�
 
 - Boostを最新バージョンでインストールすると、不具合がたくさん出ています。
     - 最新バージョンにしろとは書かれていた。
-- 固定幅整数型が未定義のため、`ns3::uint32_t`を使用することがあり、ビルドエラーが発生することがあります。なんでや
+- 固定幅整数型が未定義のため、`ns3::uint32_t`を使用することがあり、ビルドエラーが発生することがあります。
     - `#include <cstdint>`を追加することで解決します。
 - Boostのバージョンによって、ビルドエラーが発生することがあります。
 - [https://www.nsnam.org/wiki/HOWTO_build_old_versions_of_ns-3_on_newer_compilers](HOWTO build old versions of ns-3 on newer compilers - Nsnam)
