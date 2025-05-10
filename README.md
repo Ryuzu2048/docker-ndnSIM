@@ -41,7 +41,34 @@
 git clone -b origin/ubuntu20.04 https://github.com/Ryuzu2048/docker-ndnSIM.git
 ```
 
+### `.env`ファイルの作成
+
+```shell
+cp .env.example .env
+```
+
+`.env`ファイルを作成し、必要な環境変数を設定します。
+
+`.env`ファイルの例は以下の通りです。
+
+```
+PASSWORD=passwd001
+SSH_PORT=10022
+LOCALHOST_BINDING=127.0.0.1
+```
+
+- `PASSWORD` : SSH接続時のパスワード
+- `SSH_PORT` : SSH接続時のポート番号
+- `LOCALHOST_BINDING` : SSH接続時のローカルホストのIPアドレス
+    - `LOCALHOST_BINDING`は、空欄にすると、`0.0.0.0`が設定されます。
+    - [compose.yaml](./compose.yaml)の`ports`セクションで、使用する。
+
 ### Docker関連
+
+> [!NOTE]
+> `Dev Container`使用を推奨
+> 
+> [PyViz visualizer](#pyviz-visualizer)を使用することが出来ます。
 
 #### 起動
 
@@ -130,18 +157,21 @@ ndnSIMでシミュレーションを実行する際に、PyViz visualizerを使�
 
 使用する際は、`--vis`オプションを指定してください。
 
+> [!NOTE]
+>
+> 現時点での確認情報
+>
+> - `Dev Container`を使用している場合、`--vis`オプションを指定すると、PyViz visualizerが起動します。
+> - SSH接続を使用している場合、接続時に、`-AXY`オプションを指定してください。
+>   - `ssh -AXY <user>@<host>`
+> - `Docker Compose`から起動する場合、環境によっては使用できない場合があります。
+>   - `docker compose up`
+
 ### 例
 
 ```shell
 ./waf --run=ndn-simple --vis
 ```
-
-### Tips
-
-- `Dev Container`を使用している場合、`--vis`オプションを指定すると、PyViz visualizerが起動します。
-- SSH接続を使用している場合、接続時に、`-AXY`オプションを指定してください。
-- `Docker Compose`から起動する場合、環境によっては使用できない場合があります。
-  - `docker compose up`
 
 ## 注意点
 
