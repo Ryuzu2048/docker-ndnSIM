@@ -2,10 +2,9 @@
 
 ## 説明
 
-- ndnSIMをDockerで動かすためのリポジトリです。
-- [ndnSIM documentation](https://ndnsim.net/2.9/)
-- [Getting Started &#8212;  ndnSIM documentation](https://ndnsim.net/current/getting-started.html)
+### 本リポジトリに関して
 
+- ndnSIMをDockerで動かすためのリポジトリです。
 
 > [!CAUTION]
 > - 完全な動作を保証するものではありません。
@@ -14,6 +13,10 @@
 
 > [!NOTE]
 > - 動作させることを目的としています。
+
+### ndnSIMに関して
+- [ndnSIM documentation](https://ndnsim.net/2.9/)
+- [Getting Started &#8212;  ndnSIM documentation](https://ndnsim.net/current/getting-started.html)
 
 ## 使い方
 
