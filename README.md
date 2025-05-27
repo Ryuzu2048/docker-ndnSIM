@@ -53,7 +53,7 @@ git clone -b origin/ubuntu20.04 https://github.com/Ryuzu2048/docker-ndnSIM.git
 ### 2. `.env`ファイルの作成
 
 ```shell
-cp .env.example .env
+cp .env_example .env
 ```
 
 `.env`ファイルを作成し、必要な環境変数を設定します。
