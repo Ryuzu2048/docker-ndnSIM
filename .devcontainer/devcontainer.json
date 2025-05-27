@@ -12,7 +12,9 @@
                 "mhutchie.git-graph",
                 "ms-python.python",
                 "ms-python.debugpy",
-                "mosapride.zenkaku"
+                "mosapride.zenkaku",
+                "GitHub.copilot",
+                "ms-vscode.hexeditor"
             ]
         }
     }
