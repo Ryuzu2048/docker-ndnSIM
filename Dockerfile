@@ -50,8 +50,7 @@ RUN apt-get -y install \
     g++ \
     make \
     pkg-config \
-    libbz2-dev \
-    ccache
+    libbz2-dev
 
 ## https://www.boost.org/users/download/
 ### バージョン1.88.0
@@ -106,6 +105,23 @@ RUN apt-get -y install \
     python3-pygccxml
     
 RUN pip3 install kiwi
+
+# other packages
+RUN apt-get -y install \
+    ccache \
+    libgtk-3-dev \
+    libhdf5-dev \
+    doxygen \
+    python3-sphinx \
+    valgrind
+
+# https://ndnsim.net/current/parallel-simulations.html
+## parallel execution
+RUN apt-get -y install \
+    openmpi-bin \
+    openmpi-common \
+    openmpi-doc \
+    libopenmpi-dev
 ########################↑ END ↑########################
 
 RUN apt-get clean && \
