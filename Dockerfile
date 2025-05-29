@@ -83,6 +83,7 @@ RUN apt-get -y install \
     ccache \
     libgtk-3-dev \
     libhdf5-dev \
+    hdf5-tools \
     doxygen \
     python3-sphinx \
     valgrind
