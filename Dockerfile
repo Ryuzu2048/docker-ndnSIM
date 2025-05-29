@@ -52,34 +52,6 @@ RUN apt-get -y install \
     pkg-config \
     libbz2-dev
 
-## https://www.boost.org/users/download/
-### バージョン1.88.0
-# RUN wget https://archives.boost.io/release/1.88.0/source/boost_1_88_0.tar.gz && \
-#     tar zxf boost_1_88_0.tar.gz && \
-#     cd boost_1_88_0 && \
-#     ./bootstrap.sh && \
-#     ./b2 --prefix=/usr/local install && \
-#     rm -rf boost_1_88_0.tar.gz && \
-#     cd /work
-
-### バージョン1.62.0
-# RUN wget http://downloads.sourceforge.net/project/boost/boost/1.62.0/boost_1_62_0.tar.bz2 && \
-#     tar jxf boost_1_62_0.tar.bz2 && \
-#     cd boost_1_62_0 && \
-#     ./bootstrap.sh && \
-#     sudo ./b2 --prefix=/usr/local install && \
-#     rm -rf boost_1_62_0.tar.bz2 && \
-#     cd /work
-
-### バージョン1.65.1
-# RUN wget https://archives.boost.io/release/1.65.1/source/boost_1_65_1.tar.gz && \
-#     tar zxf boost_1_65_1.tar.gz && \
-#     cd boost_1_65_1 && \
-#     ./bootstrap.sh && \
-#     ./b2 --prefix=/usr/local install && \
-#     rm -rf boost_1_65_1.tar.gz && \
-#     cd /work
-
 ########################↓ START ↓########################    
 # https://ndnsim.net/current/getting-started.html
 ## ndn-cxx prerequisites
