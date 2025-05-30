@@ -27,20 +27,6 @@ else
   echo "pybindgen already exists, skipping clone."
 fi
 
-# OpenFlow のクローン
-## https://www.nsnam.org/docs/models/html/openflow-switch.html
-if [ ! -d "openflow" ]; then
-  echo "Cloning openflow..."
-  git clone https://gitlab.com/nsnam/openflow.git openflow
-  cd openflow
-  cmake -B build -D CMAKE_INSTALL_PREFIX=./out .
-  cmake --build build
-  cmake --install build
-  cd "$NDNSIM_DIR"
-else
-  echo "openflow already exists, skipping clone."
-fi
-
 # Click のクローン
 ## https://www.nsnam.org/docs/models/html/click.html
 if [ ! -d "click" ]; then
