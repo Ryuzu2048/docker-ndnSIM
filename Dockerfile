@@ -78,16 +78,6 @@ RUN apt-get -y install \
     
 RUN pip3 install kiwi
 
-# other packages
-RUN apt-get -y install \
-    ccache \
-    libgtk-3-dev \
-    libhdf5-dev \
-    hdf5-tools \
-    doxygen \
-    python3-sphinx \
-    valgrind
-
 # https://ndnsim.net/current/parallel-simulations.html
 ## parallel execution
 RUN apt-get -y install \
@@ -95,6 +85,23 @@ RUN apt-get -y install \
     openmpi-common \
     openmpi-doc \
     libopenmpi-dev
+
+# other packages
+RUN apt-get -y install \
+    ccache \
+    libgtk-3-dev \
+    libhdf5-dev \
+    hdf5-tools \
+    doxygen \
+    valgrind \
+    libxml2-dev \
+    sudo \
+    libgsl-dev \
+    mercurial \
+    libdpdk-dev \
+    cmake \
+    python3-sphinx
+
 ########################↑ END ↑########################
 
 RUN apt-get clean && \

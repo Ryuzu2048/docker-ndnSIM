@@ -27,6 +27,33 @@ else
   echo "pybindgen already exists, skipping clone."
 fi
 
+# OpenFlow のクローン
+## https://www.nsnam.org/docs/models/html/openflow-switch.html
+if [ ! -d "openflow" ]; then
+  echo "Cloning openflow..."
+  git clone https://gitlab.com/nsnam/openflow.git openflow
+  cd openflow
+  cmake -B build -D CMAKE_INSTALL_PREFIX=./out .
+  cmake --build build
+  cmake --install build
+  cd "$NDNSIM_DIR"
+else
+  echo "openflow already exists, skipping clone."
+fi
+
+# Click のクローン
+## https://www.nsnam.org/docs/models/html/click.html
+if [ ! -d "click" ]; then
+  echo "Cloning click..."
+  git clone https://github.com/kohler/click.git click
+  cd click
+  ./configure --disable-linuxmodule --enable-nsclick --enable-wifi
+  make
+  cd "$NDNSIM_DIR"
+else
+  echo "click already exists, skipping clone."
+fi
+
 # ndnSIM とサブモジュールの取得
 if [ ! -d "ns-3/src/ndnSIM" ]; then
   echo "Cloning ndnSIM with submodules..."
@@ -45,10 +72,21 @@ else
   cd "$NDNSIM_DIR"
 fi
 
+# BRITE のクローン
+## https://www.nsnam.org/docs/models/html/brite.html
+if [ ! -d "brite" ]; then
+  echo "Cloning brite..."
+  hg clone http://code.nsnam.org/BRITE
+  cd BRITE
+  make
+  cd "$NDNSIM_DIR"
+else
+  echo "BRITE already exists, skipping clone."
+fi
+
 # 権限の設定
 echo "Setting permissions for ndnSIM directories..."
 chmod -R 777 "$WORKDIR"
-
 
 echo "ndnSIM setup completed in $NDNSIM_DIR"
 
