@@ -60,7 +60,7 @@ fi
 
 # BRITE のクローン
 ## https://www.nsnam.org/docs/models/html/brite.html
-if [ ! -d "brite" ]; then
+if [ ! -d "BRITE" ]; then
   echo "Cloning brite..."
   hg clone http://code.nsnam.org/BRITE
   cd BRITE
